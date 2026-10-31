@@ -53,6 +53,7 @@ if TYPE_CHECKING:
 
 
 class OpenAIChatCompletionsModel(Model):
+    supports_server_managed_conversation_state = False
     _OFFICIAL_OPENAI_SUPPORTED_INPUT_CONTENT_TYPES = frozenset(
         {"input_text", "input_image", "input_audio", "input_file"}
     )

@@ -157,7 +157,10 @@ from .model_retry import (
     get_response_with_retry,
     stream_response_with_retry,
 )
-from .oai_conversation import OpenAIServerConversationTracker
+from .oai_conversation import (
+    OpenAIServerConversationTracker,
+    model_keeps_conversation_server_side,
+)
 from .prompt_cache_key import PromptCacheKeyResolver, model_settings_with_prompt_cache_key
 from .run_steps import (
     NextStepFinalOutput,
@@ -1048,7 +1051,7 @@ async def start_streaming(
                 run_state._current_turn_persisted_item_count
             )
 
-        if (
+        if model_keeps_conversation_server_side(starting_agent.model) and (
             conversation_id is not None
             or previous_response_id is not None
             or auto_previous_response_id

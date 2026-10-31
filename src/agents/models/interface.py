@@ -56,6 +56,16 @@ class Model(abc.ABC):
         name = getattr(self, "model", None)
         return get_default_model_settings(name) if isinstance(name, str) else None
 
+    supports_server_managed_conversation_state: bool = True
+    """Whether the provider keeps the conversation on its own side.
+
+    When this is ``True`` the runner may hand ``conversation_id``, ``previous_response_id``
+    or ``auto_previous_response_id`` to the model and stop resending the history it already
+    sent. Adapters that require the caller to resend the full conversation (Chat Completions,
+    for example) set this to ``False`` so the runner keeps assembling the history instead of
+    sending a turn without it.
+    """
+
     async def _cleanup_on_run_end(self, owner: object) -> None:
         """Release run-scoped resources after the runner finishes using this model."""
         return None

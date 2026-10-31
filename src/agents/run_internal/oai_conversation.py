@@ -120,6 +120,15 @@ _PreparedItemSource = tuple[TResponseInputItem, TResponseInputItem, str | None]
 _PreparedSourceIdentity = tuple[TResponseInputItem, str | None]
 
 
+def model_keeps_conversation_server_side(model: object) -> bool:
+    """Return whether ``model`` itself retains the conversation between requests.
+
+    Chat Completions adapters ignore ``conversation_id`` and ``previous_response_id`` and need
+    the full history on every request, so the runner must not stop resending it for them.
+    """
+    return bool(getattr(model, "supports_server_managed_conversation_state", True))
+
+
 @dataclass
 class OpenAIServerConversationTracker:
     """Track server-side conversation state for conversation-aware runs.

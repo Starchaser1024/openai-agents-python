@@ -116,7 +116,10 @@ from .run_internal.model_provider_lifecycle import (
     _close_runner_owned_model_provider,
     _normalize_run_config_for_runner,
 )
-from .run_internal.oai_conversation import OpenAIServerConversationTracker
+from .run_internal.oai_conversation import (
+    OpenAIServerConversationTracker,
+    model_keeps_conversation_server_side,
+)
 from .run_internal.prompt_cache_key import PromptCacheKeyResolver
 from .run_internal.run_grouping import resolve_run_grouping_id
 from .run_internal.run_loop import (
@@ -744,7 +747,7 @@ class AgentRunner:
                 original_input_for_state = prepared_input
 
         # Check whether to enable OpenAI server-managed conversation
-        if (
+        if model_keeps_conversation_server_side(starting_agent.model) and (
             conversation_id is not None
             or previous_response_id is not None
             or auto_previous_response_id
